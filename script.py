@@ -148,33 +148,51 @@ listOfFr_1p_lay1
 listOfFr_2p_lay1
 
 '''
+########################################################
+
+def searchMatchR(list1, list2, result, count):
+    for a in list1:
+        for b in list2:
+            if a == b:
+                result.append([])
+                result[count].append(firstP_id)
+                result[count].append(a)
+                return 0
+    return 1
+
+########################################################
+def searchMatchR_2(list1, list2, result, count):
+    for a in list1:
+        for b in list2:
+            if a == b:
+                result[count].append(b)
+                result[count].append(secondP_id)
+                return 0
+    return 1
+########################################################
 connection_table=[]
 count=0
 for mem in contact:
     cont_frlst=getListOfFriends (mem)
-    
-    for fr in cont_frlst:
-        for nb in listOfFr_1p_lay1:
-            if fr == nb:
-                connection_table.append([])
-                connection_table[count].append(firstP_id)
-                connection_table[count].append(fr)
-                connection_table[count].append(mem)
-                count+=1
-                
-            
-        for rb in listOfFr_2p_lay1:
-            if fr == rb:
-                
+    suc_f=searchMatchR(cont_frlst, listOfFr_1p_lay1, connection_table, count)
+    if suc_f==0:
+        connection_table[count].append(mem)
+        searchMatchR_2(cont_frlst, listOfFr_2p_lay1, connection_table, count)
+    count+=1 
+        
 
+print (connection_table)
 
+#############################################################
+'''
+Traceback (most recent call last):
+  File "C:\Users\Admin\Desktop\programming\Python\friends\script.py", line 177, in <module>
+    suc_f=searchMatchR(cont_frlst, listOfFr_1p_lay1, connection_table, count)
+  File "C:\Users\Admin\Desktop\programming\Python\friends\script.py", line 158, in searchMatchR
+    result[count].append(firstP_id)
+IndexError: list index out of range
 
-
-
-
-
-
-
+'''
 
 
 
