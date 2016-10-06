@@ -127,7 +127,7 @@ if len(list(mn_betw)) == 0:
         else:
             print ('You have %d mutual friends' % len(list(mn_betw22)))
             print (list(mn_betw22))
-            sys.exit()          ######## Exit if Match results
+            #sys.exit()          ######## Exit if Match results
     
                 
     else:
@@ -139,6 +139,59 @@ else:
     print ('You have %d mutual friends' % len(list(mn_betw)))
     print (list(mn_betw))
     sys.exit()          ######## Exit if Match results
+##################################################################################################################
+
+contact=list(mn_betw22)
+'''
+
+listOfFr_1p_lay1
+listOfFr_2p_lay1
+
+'''
+connection_table=[]
+count=0
+for mem in contact:
+    cont_frlst=getListOfFriends (mem)
+    
+    for fr in cont_frlst:
+        for nb in listOfFr_1p_lay1:
+            if fr == nb:
+                connection_table.append([])
+                connection_table[count].append(firstP_id)
+                connection_table[count].append(fr)
+                connection_table[count].append(mem)
+                count+=1
+                
+            
+        for rb in listOfFr_2p_lay1:
+            if fr == rb:
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
