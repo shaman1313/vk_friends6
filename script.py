@@ -6,17 +6,23 @@ import sys
 
 print ('Hello! I`m script for frends search')
 
-whoAmI='alesbelarus'
-whoIsSome='manzhesova.marina'
+whoAmI='319299777'          #ID or short adress of first person
+whoIsSome='alesbelarus'       #ID or short adress of second person
 #alesbelarus
 #manzhesova.marina
 #199922935   kupchik
 #319784945   banned
 #529501        no user
 #319299777 its me
+#200323901   vasya dyachenko
+#denis_lesko
+#19036902 not friend but 2 mutual fr
 
 
-#############################################################   функция для конвертации короткого имени в uid
+#############################################################   function for convert short adress in ID
+# This function include the error checking for unknown adress or ID
+# Function return the string with ID
+
 def isIdAndConvert (whoIs):
 
     resp=urllib.request.urlopen("https://api.vk.com/method/users.get.xml?user_ids=%s" % whoIs)
@@ -55,7 +61,8 @@ print (firstP_id)
 secondP_id=isIdAndConvert(whoIsSome)
 print (secondP_id)
 
-############################################################################ функция получения списка друзей
+################################################################## Function for getting friendlist for user ID
+# Function return the list with ID of user`s friends as members of list
 def getListOfFriends (person_id):
 
     friendsOfP=urllib.request.urlopen("https://api.vk.com/method/friends.get.xml?user_id=%d" % int(person_id))
@@ -75,30 +82,63 @@ def getListOfFriends (person_id):
 ###############################################################################################################
 
 listOfFr_1p_lay1=getListOfFriends(firstP_id)
-print("In layer 1 are %d entries" % len(listOfFr_1p_lay1))
-listOfFr_1p_lay2=[]
-i=0
-for ides in listOfFr_1p_lay1:
-    listOfFr_1p_lay2.extend(getListOfFriends(ides))
-    i+=1
-    sys.stdout.write("\rdone %.2f persent" % (i/len(listOfFr_1p_lay1)*100))
-print("\nIn layer 2 are %d entries" % len(listOfFr_1p_lay2))
+print("In layer 1 are %d entries for P1" % len(listOfFr_1p_lay1))
+mn1=set(listOfFr_1p_lay1)
 
+if secondP_id in mn1:
+    print ('Second Pers is your friend!')
+    sys.exit()      ######## Exit if Match results
+    
+listOfFr_2p_lay1=getListOfFriends(secondP_id)
+print("In layer 1 are %d entries for P2" % len(listOfFr_2p_lay1))
 
-listOfFr_1p_lay3=[]
-i=0
-for ides in listOfFr_1p_lay2:
-    listOfFr_1p_lay3.extend(getListOfFriends(ides))
-    i+=1
-    sys.stdout.write("\rdone %.2f persent" % (i/len(listOfFr_1p_lay2)*100))
-print("\nIn layer 3 are %d entries" % len(listOfFr_1p_lay2))
-#print (listOfFr_1p_lay2)
+mn1=set(listOfFr_1p_lay1)   #Checking for mutual fr in layer1
+mn2=set(listOfFr_2p_lay1)
+mn_betw=mn1 & mn2
 
+if len(list(mn_betw)) == 0:
+    print('You haven`t mutual friends in 1st layer')###if you don`t have friends in L1
+    print('Downloading info for layer2:')
 
+    listOfFr_1p_lay2=[]##friendslist of L2 for P1
+    i=0
+    for ides in listOfFr_1p_lay1:
+        listOfFr_1p_lay2.extend(getListOfFriends(ides))
+        i+=1
+        sys.stdout.write("\rdone %.2f persent" % (i/len(listOfFr_1p_lay1)*100))
+    print("\nIn layer 2 are %d entries for P1" % len(listOfFr_1p_lay2))
+    
+    mn1_l2=set(listOfFr_1p_lay2)
+    mn_betw21=mn1_l2 & mn2#### the difference between L2P1 and L1P2
+    if len(list(mn_betw21)) == 0:
+        #print('You haven`t mutual friends in 2nd layer')
+        listOfFr_2p_lay2=[]
+        i=0
+        for ides in listOfFr_2p_lay1:
+            listOfFr_2p_lay2.extend(getListOfFriends(ides))
+            i+=1
+            sys.stdout.write("\rdone %.2f persent" % (i/len(listOfFr_2p_lay1)*100))
+        print("\nIn layer 2 are %d entries" % len(listOfFr_2p_lay2))
 
+        mn2_l2=set(listOfFr_2p_lay2)
+        mn_betw22=mn1_l2 & mn2_l2######the difference between L2P1 and L2P2
+        if len(list(mn_betw22)) == 0:
+            print('You haven`t mutual friends in 2st layer')
+        else:
+            print ('You have %d mutual friends' % len(list(mn_betw22)))
+            print (list(mn_betw22))
+            sys.exit()          ######## Exit if Match results
+    
+                
+    else:
+        print ('You have %d mutual friends' % len(list(mn_betw21)))
+        print (list(mn_betw21))
+        sys.exit()          ######## Exit if Match results
 
-#listOfFr_2p_lay1=getListOfFriends(secondP_id)
-
+else:
+    print ('You have %d mutual friends' % len(list(mn_betw)))
+    print (list(mn_betw))
+    sys.exit()          ######## Exit if Match results
 
 
 
