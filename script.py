@@ -2,12 +2,13 @@ import urllib.request
 import urllib.parse
 from xml.dom.minidom import *
 import sys
-
+import os
+import time
 
 print ('Hello! I`m script for frends search')
-
+start=time.time()
 whoAmI='319299777'          #ID or short adress of first person
-whoIsSome='alesbelarus'       #ID or short adress of second person
+whoIsSome='lizmarchenko'       #ID or short adress of second person
 #alesbelarus
 #manzhesova.marina
 #199922935   kupchik
@@ -106,6 +107,56 @@ def searchMatchR_2(list1, list2, result, count):
                 return 0
     return 1
 #################################################################################################################
+#######################################################################   func user data
+def getUserData(person_id):
+    global info_lst
+    info_lst=[]
+    person=urllib.request.urlopen("https://api.vk.com/method/users.get.xml?user_id=%d&fields=photo_100,bdate" % int(person_id))
+    dec_person=person.read().decode("utf-8")
+
+    f=open("person.xml", 'w', encoding='utf-8')
+    f.write(dec_person)
+    f.close()
+
+    xml=parse('person.xml')
+
+    uid=xml.getElementsByTagName('uid')
+    for node in uid:
+        uid_v=(node.childNodes[0].nodeValue)
+    info_lst.append(uid_v)
+
+    first_name=xml.getElementsByTagName('first_name')
+    for node in first_name:
+        first_name_v=(node.childNodes[0].nodeValue)
+    info_lst.append(first_name_v)
+
+    last_name=xml.getElementsByTagName('last_name')
+    for node in last_name:
+        last_name_v=(node.childNodes[0].nodeValue)
+    info_lst.append(last_name_v)
+    
+    first_name_v=first_name_v.replace('\u0456', 'i')
+    first_name_v=first_name_v.replace('\u0406', 'I')
+    last_name_v=last_name_v.replace('\u0456', 'i')
+    last_name_v=last_name_v.replace('\u0406', 'I')
+
+    bdate_v=''
+    bdate=xml.getElementsByTagName('bdate')
+    for node in bdate:
+        bdate_v=(node.childNodes[0].nodeValue)
+    if len(bdate_v) != 0:
+        info_lst.append(bdate_v)
+    else:
+        info_lst.append(' ')
+
+    photo_100=xml.getElementsByTagName('photo_100')
+    for node in photo_100:
+        photo_100_v=(node.childNodes[0].nodeValue)
+    info_lst.append(photo_100_v)
+    
+    sys.stdout.write('%s %s' % (first_name_v, last_name_v))
+    return info_lst
+########################################################################
 #################################################################################################################
 #
 #                   Block of code
@@ -116,7 +167,7 @@ firstP_id=isIdAndConvert(whoAmI)
 print (firstP_id)
 secondP_id=isIdAndConvert(whoIsSome)
 print (secondP_id)
-
+contact=''
 
 listOfFr_1p_lay1=getListOfFriends(firstP_id)
 print("In layer 1 are %d entries for P1" % len(listOfFr_1p_lay1))
@@ -124,6 +175,8 @@ mn1=set(listOfFr_1p_lay1)
 
 if secondP_id in mn1:
     print ('Second Pers is your friend!')
+    os.remove('friends.xml')
+    os.remove('isUser.xml')
     sys.exit()      ######## Exit if Match results
     
 listOfFr_2p_lay1=getListOfFriends(secondP_id)
@@ -163,22 +216,28 @@ if len(list(mn_betw)) == 0:
             print('You haven`t mutual friends in 2st layer')
         else:
             print ('You have %d mutual friends' % len(list(mn_betw22)))
+            contact=list(mn_betw22)
             #print (list(mn_betw22))
             #sys.exit()          ######## Exit if Match results
     
                 
     else:
         print ('You have %d mutual friends' % len(list(mn_betw21)))
+        contact=list(mn_betw21)
         #print (list(mn_betw21))
-        sys.exit()          ######## Exit if Match results
+        #sys.exit()          ######## Exit if Match results
 
 else:
     print ('You have %d mutual friends' % len(list(mn_betw)))
+    contact=list(mn_betw)
     #print (list(mn_betw))
-    sys.exit()          ######## Exit if Match results
+    #sys.exit()          ######## Exit if Match results
 ##################################################################################################################
 print('Building the chains...')
-contact=list(mn_betw22)
+
+
+
+
 connection_table=[]
 count=0
 jj=0
@@ -198,59 +257,9 @@ print('\n%d chains were build:' % len(connection_table))
 
 print ('\n')
 
-#######################################################################func user data
-def getUserData(person_id):
-    global info_lst
-    info_lst=[]
-    person=urllib.request.urlopen("https://api.vk.com/method/users.get.xml?user_id=%d&fields=photo_100,bdate" % int(person_id))
-    dec_person=person.read().decode("utf-8")
-
-    f=open("person.xml", 'w', encoding='utf-8')
-    f.write(dec_person)
-    f.close()
-
-    xml=parse('person.xml')
-
-    uid=xml.getElementsByTagName('uid')
-    for node in uid:
-        uid_v=(node.childNodes[0].nodeValue)
-    info_lst.append(uid_v)
-
-    first_name=xml.getElementsByTagName('first_name')
-    for node in first_name:
-        first_name_v=(node.childNodes[0].nodeValue)
-    info_lst.append(first_name_v)
-
-    last_name=xml.getElementsByTagName('last_name')
-    for node in last_name:
-        last_name_v=(node.childNodes[0].nodeValue)
-    info_lst.append(last_name_v)
-
-    bdate_v=''
-    bdate=xml.getElementsByTagName('bdate')
-    for node in bdate:
-        bdate_v=(node.childNodes[0].nodeValue)
-    if len(bdate_v) != 0:
-        info_lst.append(bdate_v)
-    else:
-        info_lst.append(' ')
-
-    photo_100=xml.getElementsByTagName('photo_100')
-    for node in photo_100:
-        photo_100_v=(node.childNodes[0].nodeValue)
-    info_lst.append(photo_100_v)
-
-    first_name_v=first_name_v.replace('\u0456', 'i')
-    last_name_v=last_name_v.replace('\u0456', 'i')
-
-    
-
-    
-
-    
-    sys.stdout.write('%s %s' % (first_name_v, last_name_v))
-    return info_lst
-########################################################################
+########################################################################################
+#           GENERATION THE HTML-FILE - result; and out the result to terminal
+########################################################################################
 gi=0
 f=open("result.html", 'w', encoding='utf-8')
 f.write('''<!DOCTYPE html >
@@ -365,19 +374,10 @@ f.write('''</div>
  </div>
 </body></html>''')
 f.close()
- 
-########################################################################################
-#           GENERATION HTML-FILE
-########################################################################################
 
-
-
-
-
-
-
-
-
-
-
-
+os.remove('friends.xml')
+os.remove('isUser.xml')
+os.remove('person.xml')
+finish=time.time()
+exect=finish-start
+print('On work %d', int(exect))
