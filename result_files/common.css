@@ -1,0 +1,63 @@
+#common_css
+{display:none}
+
+body{background:#edeef0;color:#000;margin:0;padding:0;direction:ltr;font-size:13px;font-family:-apple-system,BlinkMacSystemFont,Roboto,Open Sans,Helvetica Neue,sans-serif;line-height:1.154;font-weight:400;-webkit-font-smoothing:subpixel-antialiased;-moz-osx-font-smoothing:auto}
+
+.fixed
+{position:fixed}
+body.firefox #page_wrap{position:relative;width:100%;overflow:hidden}
+.table td{vertical-align:top;text-align:left}:focus{outline:none}::-moz-focus-inner{border:0}
+.scroll_fix_wrap{text-align:left;direction:ltr}
+a{color:#2a5885;text-decoration:none;cursor:pointer}
+a b,b a{color:#42648b}
+a:hover{text-decoration:underline}
+b,strong{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+img{border:0;color:transparent}
+form{margin:0;padding:0}
+small{font-size:12.5px}
+textarea.ashelper{overflow:hidden}
+.fl_l{float:left}
+.fl_r{float:right}
+h1{font-size:18px;color:#222;margin:20px 0 5px}
+h1,h2{font-weight:400;-webkit-font-smoothing:subpixel-antialiased;-moz-osx-font-smoothing:auto}
+h2{font-size:16px;color:#2b2f33}
+h2,h3{margin:20px 0 15px}
+h3{font-size:13px;color:#828282;font-weight:500;-webkit-font-smoothing:subpixel-antialiased;-moz-osx-font-smoothing:auto}
+h4{border-bottom:1px solid #e8ebee;color:#45688e;font-size:0.923em;font-weight:700;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0 0 3px}
+h4 .fl_r,h4 span{font-weight:400}
+h4 .fl_r,h4 span,.subheader,h4.subheader{-webkit-font-smoothing:subpixel-antialiased;-moz-osx-font-smoothing:auto}
+.subheader,h4.subheader{color:#222;font-weight:500;margin:18px 0 12px;padding:0;border-bottom:none;font-size:inherit}
+.h2_add{font-weight:400;-webkit-font-smoothing:subpixel-antialiased;-moz-osx-font-smoothing:auto;font-size:13px}
+
+div#utils{top:-30px;position:absolute;height:20px;overflow:hidden}
+#page_layout{padding:0 15px;margin:0 auto;position:relative;width:960px}
+#page_header_cont{position:fixed;height:42px;width:100%;left:0;top:0;z-index:120;direction:ltr}
+body.mac #page_header_cont{-webkit-transform:translateZ(0);transform:translateZ(0)}
+.static_header #page_header_cont{position:absolute}
+#page_header_wrap{direction:ltr}
+#page_header{position:relative;height:42px;margin:0 auto;font-size:12.5px;padding:0 15px}
+#page_header_cont .back{position:absolute;width:100%;background:#507299;height:42px;box-sizing:border-box}
+#page_header_cont .back:after{content:'';height:1px;bottom:0;left:0;right:0;background:#466991;box-shadow:100px 0 0 #466991}
+
+.head_nav{margin:0}
+.top_back_link{position:absolute;top:0;left:0;width:200px;display:none!important;padding:12px 10px 15px;height:13px;margin:0;font-weight:700;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-size:13px;color:#e8eff7;text-shadow:0 1px 0 #4e7097}
+
+#page_body{font-size:13px;width:631px;margin-top:42px}
+#wrap_between{height:0;overflow:hidden}
+* html #content{height:1%}
+#header_wrap1{border:solid #f3f3f3;border-width:0 1px}
+#header{font-weight:700;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-size:11px;padding:7px 10px;line-height:140%;background:#e9edf1;color:#607387;border:solid #d9e0e7;border-width:0 1px}
+#header,#title b{position:relative}
+#header h1{margin:0;font-size:11px;overflow:hidden}
+#header b,#header span{color:#aab7c5}
+
+.page_block{position:relative;background:#fff;border-radius:2px;box-shadow:0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;margin:15px 0 0}
+.page_block:empty{display:none}
+h2.page_block_h2{margin:0px;font-size:inherit;font-weight:inherit;color:inherit}
+.page_block_header{display:block;background:#fafbfc;padding:0 20px;height:54px;line-height:54px;border-bottom:1px solid #e7e8ec;border-radius:2px 2px 0 0;font-size:16px;outline:none;color:#000}
+.page_block_header.unshown{display:none}
+.page_block_header:hover{text-decoration:none}
+a.page_block_header:hover .header_side_link{text-decoration:underline}
+.page_block_header .header_side_link,.page_block_sub_header .header_side_link,.ui_tabs_header .header_side_link,.ui_tabs_sub_header .header_side_link{float:right;line-height:54px;font-size:13px}
+.page_block_header_count{display:inline-block;font-size:14px;color:#939393;padding:0 7px}
+.wide_column{position:relative;width:100%}

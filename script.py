@@ -185,22 +185,24 @@ jj=0
 for mem in contact:
     cont_frlst=getListOfFriends (mem)
     suc_f=searchMatchR(cont_frlst, listOfFr_1p_lay1, connection_table, count)
+    jj+=1
+    sys.stdout.write("\rdone %.2f persent" % ((jj/len(contact))*100))
     if suc_f==0:
         connection_table[count].append(mem)
         searchMatchR_2(cont_frlst, listOfFr_2p_lay1, connection_table, count)
         count+=1
         continue
-    jj+=1
-    sys.stdout.write("\rdone %.2f persent" % ((jj/len(contact))*100))
-
+    
+print('\n%d chains were build:' % len(connection_table))
 #############################################################
 
 print ('\n')
 
 #######################################################################func user data
 def getUserData(person_id):
-
-    person=urllib.request.urlopen("https://api.vk.com/method/users.get.xml?user_id=%d" % int(person_id))
+    global info_lst
+    info_lst=[]
+    person=urllib.request.urlopen("https://api.vk.com/method/users.get.xml?user_id=%d&fields=photo_100,bdate" % int(person_id))
     dec_person=person.read().decode("utf-8")
 
     f=open("person.xml", 'w', encoding='utf-8')
@@ -208,32 +210,165 @@ def getUserData(person_id):
     f.close()
 
     xml=parse('person.xml')
+
     uid=xml.getElementsByTagName('uid')
     for node in uid:
         uid_v=(node.childNodes[0].nodeValue)
+    info_lst.append(uid_v)
+
     first_name=xml.getElementsByTagName('first_name')
     for node in first_name:
         first_name_v=(node.childNodes[0].nodeValue)
+    info_lst.append(first_name_v)
+
     last_name=xml.getElementsByTagName('last_name')
     for node in last_name:
         last_name_v=(node.childNodes[0].nodeValue)
+    info_lst.append(last_name_v)
+
+    bdate_v=''
+    bdate=xml.getElementsByTagName('bdate')
+    for node in bdate:
+        bdate_v=(node.childNodes[0].nodeValue)
+    if len(bdate_v) != 0:
+        info_lst.append(bdate_v)
+    else:
+        info_lst.append(' ')
+
+    photo_100=xml.getElementsByTagName('photo_100')
+    for node in photo_100:
+        photo_100_v=(node.childNodes[0].nodeValue)
+    info_lst.append(photo_100_v)
 
     first_name_v=first_name_v.replace('\u0456', 'i')
     last_name_v=last_name_v.replace('\u0456', 'i')
+
+    
+
+    
+
     
     sys.stdout.write('%s %s' % (first_name_v, last_name_v))
-    return 0
+    return info_lst
 ########################################################################
 gi=0
-for mem in connection_table:
+f=open("result.html", 'w', encoding='utf-8')
+f.write('''<!DOCTYPE html >
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="description" content="">
+<title>Results</title>
+  <link rel="stylesheet" type="text/css" href="result_files/fonts_cnt.css">
+  <link rel="stylesheet" type="text/css" href="result_files/common.css">
+  <link type="text/css" rel="stylesheet" href="result_files/docs.css">
+  <style>
+   TABLE {
+    table-layout: fixed; /* Ячейки фиксированной ширины */
+   }
+   td {
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: hidden; /* Обрезаем все, что не помещается в область */
+    text-overflow: ellipsis; /* Добавляем многоточие */
+	
+   }
+  </style>
+ </head>
+
+<body>
+  
+  <div id="notifiers_wrap" class="fixed" style="bottom: 0px;"></div>
+  <div class="scroll_fix_wrap _page_wrap" id="page_wrap" style="height: auto; margin-top: 0px;">
+  <div>
+  <div class="scroll_fix" style="width: 1902px;">
+  
+
+  <div id="page_header_cont" class="page_header_cont">
+    <div class="back"></div>
+    <div id="page_header_wrap" class="page_header_wrap" style="width: 1902px; margin-left: 0px;">
+      <a class="top_back_link" href="" id="top_back_link"  style="max-width: 1867px; display: none;"></a>
+      <div id="page_header" class="p_head p_head_l1" style="width: 960px">
+        <div class="content">
+          <div id="top_nav" class="head_nav"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page_layout" style="width: 960px;">
+    <div id="side_bar" class="fl_l " style="">
+      
+    </div>
+
+    <div id="page_body" class="fl_r " style="width: 795px;">
+      <div id="header_wrap2">
+        <div id="header_wrap1">
+          <div id="header" style="display: none">
+            <h1 id="title">false</h1>
+          </div>
+        </div>
+      </div>
+      <div id="wrap_between"></div>
+      <div id="wrap3"><div id="wrap2">
+  <div id="wrap1">
+  
+  
+  
+  <div class="wide_column_wrap">
+    <div class="wide_column" id="wide_column">
+      <div class="page_block">
+  <h2 class="page_block_h2"><div class="page_block_header">
+    <div id="docs_title" class="docs_title">Chains:</div>''')
+f.close()
+chains_number=len(connection_table)
+f=open("result.html", 'a', encoding='utf-8')
+f.write('''<div id="docs_summary" class="page_block_header_count">%d</div>
     
+  </div></h2>
+  
+  <div class="docs_wrap">
+    <div id="docs_list">''' % chains_number)
+f.close()
+
+for mem in connection_table:
+    f=open("result.html", 'a', encoding='utf-8')
+    f.write('''<div class="docs_item _docs_item" id="docs_file_319299777_414600186">
+ <table width="100%" >
+  <tr>''')
+
+    one_chain=[]
     for user in connection_table[gi]:
-        getUserData(user)
+        one_chain.append(getUserData(user))
         sys.stdout.write(' -> ')
+    for mem in one_chain:
+        f.write('''<td align="center">
+	<img  src="%s" ></td>''' % mem[4])
+    
+    f.write('''</tr>
+   
+    <tr>''')
+    for mem in one_chain:
+        f.write('''<td align="center">
+	<a class="docs_item_name" href="https://vk.com/id%s" >%s %s</a>
+	<div class="docs_item_date">%s</div></td>''' % (mem[0], mem[1], mem[2], mem[3]))
+    f.write('''</tr>
+   
+    </table>
+  
+     </div>''')
+    f.close()
     gi+=1
     sys.stdout.write('\n')
 
-
+f=open("result.html", 'a', encoding='utf-8')
+f.write('''</div>
+ </div>
+</body></html>''')
+f.close()
+ 
+########################################################################################
+#           GENERATION HTML-FILE
+########################################################################################
 
 
 

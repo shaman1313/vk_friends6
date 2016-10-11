@@ -1,0 +1,53 @@
+#docs_css
+
+{display:none}
+
+.docs_wrap
+{padding:0 20px}
+.docs_title
+{display:inline-block}
+
+
+.docs_item
+{display:block;padding:15px 0;border-top:1px solid #e7e8ec;overflow:hidden}
+.docs_item.docs_item_deleted .docs_item_cont,.docs_item.docs_item_deleted .docs_item_icon,.docs_item.docs_item_deleted .docs_item_thumb
+{pointer-events:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;opacity:0.5;filter:alpha(opacity=50)}
+.docs_item.docs_item_deleted .docs_item_restore
+{display:block;margin-top:9px}
+.docs_item.docs_item_deleted .docs_action_icon,.docs_item.docs_item_loading .docs_action_icon,.docs_item.docs_item_loading .docs_item_restore
+{display:none}
+.docs_item.docs_item_loading .docs_action_icon.docs_item_progress,.docs_item.docs_item_loading .docs_item_restore.docs_item_progress
+{display:block}
+.docs_item:hover
+{text-decoration:none}
+.docs_item:hover .docs_action_icon
+{opacity:0.75;filter:alpha(opacity=75)}
+.docs_item:hover .docs_action_icon:hover,.docs_item:hover .docs_choose_attach,.docs_item:hover .docs_item_thumb[ext=gif] .docs_item_play
+{opacity:1;-webkit-filter:none;filter:none}
+.docs_item:first-child
+{border-top:none}
+
+.docs_item_thumb_wrap
+{text-align:center;width:200px;margin-left:-83px}
+.docs_item_thumb
+{position:relative;display:block;float:left;width:34px;height:34px;border-radius:2px;overflow:hidden}
+.docs_item_thumb_img{max-height:34px;*height:34px;border-radius:2px}
+
+.docs_item_cont
+{margin-left:47px;font-size:12.5px;line-height:17px;overflow:hidden;text-overflow:ellipsis}
+a.docs_item_name
+{font-weight:700;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:#42648b;white-space:nowrap}
+.docs_item_date
+{color:#939393}
+.docs_item_actions
+{float:right}
+
+.docs_item_selected .docs_item_cont,.docs_item_selected .docs_item_icon,.docs_item_selected .docs_item_thumb
+{opacity:0.5;filter:alpha(opacity=50)}
+
+.docs_choose_rows .docs_item
+{cursor:pointer;border-bottom:1px solid #e7e8ec;margin-bottom:-1px}
+.docs_choose_rows .docs_item:last-child
+{border-bottom:none;margin-bottom:0;padding-bottom:20px;border-radius:0 0 2px 2px}
+.docs_choose_rows .docs_item:hover
+{background-color:#fafbfc;margin-left:-25px;margin-right:-25px;padding-left:25px;padding-right:25px}
