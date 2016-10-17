@@ -8,7 +8,7 @@ import time
 print ('Hello! I`m script for frends search')
 start=time.time()
 whoAmI='319299777'          #ID or short adress of first person
-whoIsSome='42786869'       #ID or short adress of second person
+whoIsSome='19036902'       #ID or short adress of second person
 #alesbelarus
 #manzhesova.marina
 #199922935   kupchik
@@ -18,9 +18,6 @@ whoIsSome='42786869'       #ID or short adress of second person
 #200323901   vasya dyachenko
 #denis_lesko
 #19036902 not friend but 2 mutual fr
-
-
-
 
 #######################################################################################################
 #
@@ -83,30 +80,7 @@ def getListOfFriends (person_id):
     return listOfFriends
 ###############################################################################################################
 
-############################################################################ Function to form first half of chain
 
-def searchMatchR(list1, list2, result, count):
-    for a in list1:
-        for b in list2:
-            if a == b:
-                result.append([])
-                result[count].append(firstP_id)
-                result[count].append(a)
-                
-                return 0
-    return 1
-
-########################################################################### Function to form second half of chain
-def searchMatchR_2(list1, list2, result, count):
-    for a in list1:
-        for b in list2:
-            if a == b:
-                result[count].append(b)
-                result[count].append(secondP_id)
-                
-                return 0
-    return 1
-#################################################################################################################
 #######################################################################   func user data
 def getUserData(person_id):
     global info_lst
@@ -130,10 +104,13 @@ def getUserData(person_id):
         first_name_v=(node.childNodes[0].nodeValue)
     info_lst.append(first_name_v)
 
-    last_name=xml.getElementsByTagName('last_name')
-    for node in last_name:
-        last_name_v=(node.childNodes[0].nodeValue)
-    info_lst.append(last_name_v)
+    if first_name_v=='DELETED':
+        last_name_v='DELETED'
+    else:
+        last_name=xml.getElementsByTagName('last_name')
+        for node in last_name:
+            last_name_v=(node.childNodes[0].nodeValue)
+        info_lst.append(last_name_v)
     
     first_name_v=first_name_v.replace('\u0456', 'i')
     first_name_v=first_name_v.replace('\u0406', 'I')
@@ -167,95 +144,72 @@ firstP_id=isIdAndConvert(whoAmI)
 print (firstP_id)
 secondP_id=isIdAndConvert(whoIsSome)
 print (secondP_id)
+
 contact=''
+connection_table=[]
 
 listOfFr_1p_lay1=getListOfFriends(firstP_id)
 print("In layer 1 are %d entries for P1" % len(listOfFr_1p_lay1))
-mn1=set(listOfFr_1p_lay1)
 
-if secondP_id in mn1:
-    print ('Second Pers is your friend!')
-    os.remove('friends.xml')
-    os.remove('isUser.xml')
-    sys.exit()      ######## Exit if Match results
-    
+
+print('Building the chains...')
+
+
+mn_listOfFr_1p=set(listOfFr_1p_lay1)
+
+if secondP_id in mn_listOfFr_1p:
+    print ('Second person is your friend!')
+    sys.exit()          ######## Exit if Match results
+else:
+    iteration=0
+    for member in listOfFr_1p_lay1:
+        member_friends=getListOfFriends(member)
+        mn_member_friends=set(member_friends)
+        iteration+=1
+        sys.stdout.write("\rdone %.2f persent" % ((iteration/len(listOfFr_1p_lay1))*100))
+        if secondP_id in mn_member_friends:
+            ########## add chain ########
+            chain=[firstP_id, member, secondP_id]
+            connection_table.append(chain)
+
+print('\n%d chains were build:' % len(connection_table))
+
+finish=time.time()
+exect=finish-start
+print('On work %.3f seconds' % exect)
+##############################################################################################
+#second variant
+#restart the timer
+start=time.time()
+
+contact=''
+
+
+listOfFr_1p_lay1=getListOfFriends(firstP_id)
+print("In layer 1 are %d entries for P1" % len(listOfFr_1p_lay1))
 listOfFr_2p_lay1=getListOfFriends(secondP_id)
 print("In layer 1 are %d entries for P2" % len(listOfFr_2p_lay1))
 
 mn1=set(listOfFr_1p_lay1)   #Checking for mutual fr in layer1
 mn2=set(listOfFr_2p_lay1)
 mn_betw=mn1 & mn2
-
-if len(list(mn_betw)) == 0:
-    print('You haven`t mutual friends in 1st layer')###if you don`t have friends in L1
-    print('Downloading info for layer2:')
-
-    listOfFr_1p_lay2=[]##friendslist of L2 for P1
-    i=0
-    for ides in listOfFr_1p_lay1:
-        listOfFr_1p_lay2.extend(getListOfFriends(ides))
-        i+=1
-        sys.stdout.write("\rdone %.2f persent" % (i/len(listOfFr_1p_lay1)*100))
-    print("\nIn layer 2 are %d entries for P1" % len(listOfFr_1p_lay2))
-    
-    mn1_l2=set(listOfFr_1p_lay2)
-    mn_betw21=mn1_l2 & mn2#### the difference between L2P1 and L1P2
-    if len(list(mn_betw21)) == 0:
-        #print('You haven`t mutual friends in 2nd layer')
-        listOfFr_2p_lay2=[]
-        i=0
-        for ides in listOfFr_2p_lay1:
-            listOfFr_2p_lay2.extend(getListOfFriends(ides))
-            i+=1
-            sys.stdout.write("\rdone %.2f persent" % (i/len(listOfFr_2p_lay1)*100))
-        print("\nIn layer 2 are %d entries" % len(listOfFr_2p_lay2))
-
-        mn2_l2=set(listOfFr_2p_lay2)
-        mn_betw22=mn1_l2 & mn2_l2######the difference between L2P1 and L2P2
-        if len(list(mn_betw22)) == 0:
-            print('You haven`t mutual friends in 2st layer')
-        else:
-            print ('You have %d mutual friends' % len(list(mn_betw22)))
-            contact=list(mn_betw22)
-            #print (list(mn_betw22))
-            #sys.exit()          ######## Exit if Match results
-    
-                
-    else:
-        print ('You have %d mutual friends' % len(list(mn_betw21)))
-        contact=list(mn_betw21)
-        #print (list(mn_betw21))
-        #sys.exit()          ######## Exit if Match results
-
-else:
-    print ('You have %d mutual friends' % len(list(mn_betw)))
-    contact=list(mn_betw)
-    #print (list(mn_betw))
-    #sys.exit()          ######## Exit if Match results
-##################################################################################################################
-print('Building the chains...')
-
-
-
-
+print ('You have %d mutual friends' % len(list(mn_betw)))
+contact=list(mn_betw)
 connection_table=[]
-count=0
-jj=0
-for mem in contact:
-    cont_frlst=getListOfFriends (mem)
-    suc_f=searchMatchR(cont_frlst, listOfFr_1p_lay1, connection_table, count)
-    jj+=1
-    sys.stdout.write("\rdone %.2f persent" % ((jj/len(contact))*100))
-    if suc_f==0:
-        connection_table[count].append(mem)
-        searchMatchR_2(cont_frlst, listOfFr_2p_lay1, connection_table, count)
-        count+=1
-        continue
+
+
+for member in contact:
+    chain=[firstP_id, member, secondP_id]
+    connection_table.append(chain)
     
 print('\n%d chains were build:' % len(connection_table))
-#############################################################
+finish=time.time()
+exect=finish-start
+print('On work %.3f seconds' % exect)
+print ('Generation the result file')
+start=time.time()
 
-print ('\n')
+
 
 ########################################################################################
 #           GENERATION THE HTML-FILE - result; and out the result to terminal
@@ -381,4 +335,27 @@ os.remove('isUser.xml')
 os.remove('person.xml')
 finish=time.time()
 exect=finish-start
-print('On work %d seconds' % int(exect))
+print('On work %.3f seconds' % exect)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
