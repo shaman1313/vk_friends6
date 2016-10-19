@@ -6,9 +6,9 @@ import os
 import time
 
 print ('Hello! I`m script for frends search')
-start=time.time()
+
 whoAmI='319299777'          #ID or short adress of first person
-whoIsSome='19036902'       #ID or short adress of second person
+whoIsSome='h.victory'       #ID or short adress of second person
 #alesbelarus
 #manzhesova.marina
 #199922935   kupchik
@@ -17,7 +17,7 @@ whoIsSome='19036902'       #ID or short adress of second person
 #319299777 its me
 #200323901   vasya dyachenko
 #denis_lesko
-#19036902 not friend but 2 mutual fr
+#h.victory not friend but 2 mutual fr
 
 #######################################################################################################
 #
@@ -144,57 +144,29 @@ firstP_id=isIdAndConvert(whoAmI)
 print (firstP_id)
 secondP_id=isIdAndConvert(whoIsSome)
 print (secondP_id)
-
+start=time.time()
 contact=''
-connection_table=[]
 
 listOfFr_1p_lay1=getListOfFriends(firstP_id)
 print("In layer 1 are %d entries for P1" % len(listOfFr_1p_lay1))
-
-
-print('Building the chains...')
-
-
 mn_listOfFr_1p=set(listOfFr_1p_lay1)
 
 if secondP_id in mn_listOfFr_1p:
     print ('Second person is your friend!')
     sys.exit()          ######## Exit if Match results
-else:
-    iteration=0
-    for member in listOfFr_1p_lay1:
-        member_friends=getListOfFriends(member)
-        mn_member_friends=set(member_friends)
-        iteration+=1
-        sys.stdout.write("\rdone %.2f persent" % ((iteration/len(listOfFr_1p_lay1))*100))
-        if secondP_id in mn_member_friends:
-            ########## add chain ########
-            chain=[firstP_id, member, secondP_id]
-            connection_table.append(chain)
-
-print('\n%d chains were build:' % len(connection_table))
-
-finish=time.time()
-exect=finish-start
-print('On work %.3f seconds' % exect)
-##############################################################################################
-#second variant
-#restart the timer
-start=time.time()
-
-contact=''
 
 
-listOfFr_1p_lay1=getListOfFriends(firstP_id)
-print("In layer 1 are %d entries for P1" % len(listOfFr_1p_lay1))
+
+
+
 listOfFr_2p_lay1=getListOfFriends(secondP_id)
 print("In layer 1 are %d entries for P2" % len(listOfFr_2p_lay1))
 
-mn1=set(listOfFr_1p_lay1)   #Checking for mutual fr in layer1
-mn2=set(listOfFr_2p_lay1)
-mn_betw=mn1 & mn2
-print ('You have %d mutual friends' % len(list(mn_betw)))
-contact=list(mn_betw)
+   #Checking for mutual fr in layer1
+mn_listOfFr_2p=set(listOfFr_2p_lay1)
+mn_betw11=mn_listOfFr_1p & mn_listOfFr_2p
+print ('You have %d mutual friends' % len(list(mn_betw11)))
+contact=list(mn_betw11)
 connection_table=[]
 
 
@@ -205,15 +177,19 @@ for member in contact:
 print('\n%d chains were build:' % len(connection_table))
 finish=time.time()
 exect=finish-start
-print('On work %.3f seconds' % exect)
+print('On work %.3f seconds\n' % exect)
 print ('Generation the result file')
-start=time.time()
+
 
 
 
 ########################################################################################
 #           GENERATION THE HTML-FILE - result; and out the result to terminal
 ########################################################################################
+
+
+
+start=time.time()
 gi=0
 f=open("result.html", 'w', encoding='utf-8')
 f.write('''<!DOCTYPE html >
@@ -227,12 +203,12 @@ f.write('''<!DOCTYPE html >
   <link type="text/css" rel="stylesheet" href="result_files/docs.css">
   <style>
    TABLE {
-    table-layout: fixed; /* Ячейки фиксированной ширины */
+	table-layout: fixed; /* Ячейки фиксированной ширины */
    }
    td {
-    white-space: nowrap; /* Запрещаем перенос строк */
-    overflow: hidden; /* Обрезаем все, что не помещается в область */
-    text-overflow: ellipsis; /* Добавляем многоточие */
+	white-space: nowrap; /* Запрещаем перенос строк */
+	overflow: hidden; /* Обрезаем все, что не помещается в область */
+	text-overflow: ellipsis; /* Добавляем многоточие */
 	
    }
   </style>
@@ -247,87 +223,90 @@ f.write('''<!DOCTYPE html >
   
 
   <div id="page_header_cont" class="page_header_cont">
-    <div class="back"></div>
-    <div id="page_header_wrap" class="page_header_wrap" style="width: 1902px; margin-left: 0px;">
-      <a class="top_back_link" href="" id="top_back_link"  style="max-width: 1867px; display: none;"></a>
-      <div id="page_header" class="p_head p_head_l1" style="width: 960px">
-        <div class="content">
-          <div id="top_nav" class="head_nav"></div>
-        </div>
-      </div>
-    </div>
+	<div class="back"></div>
+	<div id="page_header_wrap" class="page_header_wrap" style="width: 1902px; margin-left: 0px;">
+	  <a class="top_back_link" href="" id="top_back_link"  style="max-width: 1867px; display: none;"></a>
+	  <div id="page_header" class="p_head p_head_l1" style="width: 960px">
+		<div class="content">
+		  <div id="top_nav" class="head_nav"></div>
+		</div>
+	  </div>
+	</div>
   </div>
 
   <div id="page_layout" style="width: 960px;">
-    <div id="side_bar" class="fl_l " style="">
-      
-    </div>
+	<div id="side_bar" class="fl_l " style="">
+	  
+	</div>
 
-    <div id="page_body" class="fl_r " style="width: 795px;">
-      <div id="header_wrap2">
-        <div id="header_wrap1">
-          <div id="header" style="display: none">
-            <h1 id="title">false</h1>
-          </div>
-        </div>
-      </div>
-      <div id="wrap_between"></div>
-      <div id="wrap3"><div id="wrap2">
+	<div id="page_body" class="fl_r " style="width: 795px;">
+	  <div id="header_wrap2">
+		<div id="header_wrap1">
+		  <div id="header" style="display: none">
+			<h1 id="title">false</h1>
+		  </div>
+		</div>
+	  </div>
+	  <div id="wrap_between"></div>
+	  <div id="wrap3"><div id="wrap2">
   <div id="wrap1">
   
   
   
   <div class="wide_column_wrap">
-    <div class="wide_column" id="wide_column">
-      <div class="page_block">
+	<div class="wide_column" id="wide_column">
+	  <div class="page_block">
   <h2 class="page_block_h2"><div class="page_block_header">
-    <div id="docs_title" class="docs_title">Chains:</div>''')
+	<div id="docs_title" class="docs_title">Chains:</div>''')
 f.close()
 chains_number=len(connection_table)
 f=open("result.html", 'a', encoding='utf-8')
 f.write('''<div id="docs_summary" class="page_block_header_count">%d</div>
-    
+	
   </div></h2>
   
   <div class="docs_wrap">
-    <div id="docs_list">''' % chains_number)
-f.close()
+	<div id="docs_list">''' % chains_number)
+#f.close()
 
 for mem in connection_table:
-    f=open("result.html", 'a', encoding='utf-8')
-    f.write('''<div class="docs_item _docs_item" id="docs_file_319299777_414600186">
+	#f=open("result.html", 'a', encoding='utf-8')
+	f.write('''<div class="docs_item _docs_item" id="docs_file_319299777_414600186">
  <table width="100%" >
   <tr>''')
 
-    one_chain=[]
-    for user in connection_table[gi]:
-        one_chain.append(getUserData(user))
-        sys.stdout.write(' -> ')
-    for mem in one_chain:
-        f.write('''<td align="center">
+	one_chain=[]
+	for user in connection_table[gi]:
+		one_chain.append(getUserData(user))
+		sys.stdout.write(' -> ')
+	for mem in one_chain:
+		f.write('''<td align="center">
 	<img  src="%s" ></td>''' % mem[4])
-    
-    f.write('''</tr>
+	
+	f.write('''</tr>
    
-    <tr>''')
-    for mem in one_chain:
-        f.write('''<td align="center">
+	<tr>''')
+	for mem in one_chain:
+		f.write('''<td align="center">
 	<a class="docs_item_name" href="https://vk.com/id%s" >%s %s</a>
 	<div class="docs_item_date">%s</div></td>''' % (mem[0], mem[1], mem[2], mem[3]))
-    f.write('''</tr>
+	f.write('''</tr>
    
-    </table>
+	</table>
   
-     </div>''')
-    f.close()
-    gi+=1
-    sys.stdout.write('\n')
+	 </div>''')
+	#f.close()
+	gi+=1
+	sys.stdout.write('\n')
 
-f=open("result.html", 'a', encoding='utf-8')
+#f=open("result.html", 'a', encoding='utf-8')
 f.write('''</div>
  </div>
 </body></html>''')
 f.close()
+
+
+
 #####################################################################################################
 #### Clearing the working directory
 os.remove('friends.xml')
