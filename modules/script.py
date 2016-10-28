@@ -3,13 +3,17 @@ import os
 import time
 sys.path.append(".\\modules")
 from function import *
+from window import *
 
 from PyQt5.QtWidgets import (QWidget, QPushButton, QLineEdit,
     QInputDialog, QApplication, QLabel, QHBoxLayout, QVBoxLayout)
 
 
+
 def main(first, second):
     print ('Hello! I`m script for frends search')
+    #self.secondWin.label2.setText('hello')
+    sys.exit()
 
 
     whoAmI=first          #ID or short adress of first person
@@ -90,6 +94,7 @@ def main(first, second):
                 listOfFr_1p_lay2.extend(getListOfFriends(member))
                 i+=1
                 sys.stdout.write("\rdone %.2f persent" % (i/len(listOfFr_1p_lay1)*100))
+                
             print("\nIn layer 2 are %d entries for P1" % len(listOfFr_1p_lay2))
             mn_listOfFr_1p_l2=set(listOfFr_1p_lay2)##friendslist of L2 for P1
             mn_betw21=mn_listOfFr_1p_l2 & mn_listOfFr_2p#### the difference between L2P1 and L1P2

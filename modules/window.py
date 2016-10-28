@@ -1,19 +1,41 @@
-import sys
+import sys, time
 sys.path.append(".\\modules")
 from script import *
 
 from PyQt5.QtWidgets import (QWidget, QPushButton, QLineEdit,
     QInputDialog, QApplication, QLabel, QHBoxLayout, QVBoxLayout, QProgressBar)
-from PyQt5.QtCore import pyqtSignal, QObject, QPoint
+from PyQt5.QtCore import pyqtSignal, QObject, QPoint, QThread, pyqtSlot
     
+   
+class signaller(QObject):
+    
+    @pyqtSlot(int)
+    def progressValueChanged(self, val):
+        progress.setValue(val)  
 
+    
+    
+    
+class ProgressThread(QThread):
+    
+    
+    def run(self):
+        for i in range(0,101):
+            time.sleep(0.1)
+            s.progressValueChanged.emit(i)
+        
 
 class ProgressWindow(QWidget):
     def __init__(self):
         super().__init__()
-
+        self.s=signaller()
         self.initProgressWindow()
-
+        self.myThread=ProgressThread()
+        self.myThread.start()
+        self.myThread.quit()
+        self.myThread.wait()
+          
+    
 
     def initProgressWindow(self):
         cancelButton = QPushButton("Cancel")
@@ -22,20 +44,25 @@ class ProgressWindow(QWidget):
         hboxManage.addStretch(1)
         hboxManage.addWidget(cancelButton)
         
-        progress=QProgressBar()
+        self.progress=QProgressBar()
         hboxProgress=QHBoxLayout()
-        #hboxProgress.addStretch(1)
-        hboxProgress.addWidget(progress)
+        hboxProgress.addWidget(self.progress)
+        
+        vboxProgress=QVBoxLayout()
+        vboxProgress.addLayout(hboxProgress)
         
         self.label=QLabel("In progress:")
+        self.label2=QLabel('This is process in progress ')
         self.hboxDescription=QHBoxLayout()
         self.hboxDescription.addWidget(self.label)
+        
         
         vbox = QVBoxLayout()
         vbox.addStretch(1)
         vbox.addLayout(self.hboxDescription)
         vbox.addStretch(1)
-        vbox.addLayout(hboxProgress)
+        vbox.addWidget(self.label2)
+        vbox.addLayout(vboxProgress)
         vbox.addStretch(1)
         vbox.addLayout(hboxManage)
         self.setLayout(vbox)    
@@ -44,6 +71,8 @@ class ProgressWindow(QWidget):
         self.setMaximumSize(400, 250)
         self.setWindowTitle('In progress...')    
         self.show()
+        
+    
 
     
     
@@ -143,7 +172,10 @@ class FirstWindow(QWidget):
         self.close()
         if not self.secondWin:
             self.secondWin=ProgressWindow()
+        
+        
         #main(self.line1_val, self.line2_val)
+        
         
     
 
@@ -153,5 +185,7 @@ def GUI():
     app = QApplication(sys.argv)
     
     ex = FirstWindow()
+    
+    
     
     sys.exit(app.exec_())
