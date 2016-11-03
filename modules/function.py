@@ -22,9 +22,9 @@ def isIdAndConvert (whoIs):
         print ("No err")
         id_idByName_request=xml.getElementsByTagName('uid')
         for node in id_idByName_request:
-                id_whoIs=node.childNodes[0].nodeValue ######### ID of user!!!!!!
-                print ("Ok... Profile ID is ", id_whoIs)
-        return id_whoIs
+            id_whoIs=node.childNodes[0].nodeValue ######### ID of user!!!!!!
+            print ("Ok... Profile ID is ", id_whoIs)
+            return id_whoIs
     
     else:
         error_code=xml.getElementsByTagName('error_code')
