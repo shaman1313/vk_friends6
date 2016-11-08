@@ -100,9 +100,13 @@ def getUserData(person_id):
         info_lst.append(' ')
 
     photo_100=xml.getElementsByTagName('photo_100')
+    photo_100_v=''
     for node in photo_100:
         photo_100_v=(node.childNodes[0].nodeValue)
-    info_lst.append(photo_100_v)
+    if len(photo_100_v)!=0:
+        info_lst.append(photo_100_v)
+    else:
+        info_lst.append(' ')
     
     sys.stdout.write('%s %s' % (first_name_v, last_name_v))
     return info_lst

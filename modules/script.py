@@ -24,8 +24,13 @@ def main(first, second):
     #199922935   kupchik
     #319784945   banned
     #529501        no user
-    #319299777 its me
+    
+    
+    #319299777      its me
     #200323901   vasya dyachenko
+    
+    
+    
     #denis_lesko
     #h.victory not friend but 2 mutual fr
     #46773881       4 friends between

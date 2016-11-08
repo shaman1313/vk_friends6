@@ -1,11 +1,12 @@
 from PyQt5.QtWidgets import (QWidget, QPushButton, QLineEdit,
-    QInputDialog, QApplication, QLabel, QHBoxLayout, QVBoxLayout, QProgressBar)
-from PyQt5.QtCore import pyqtSignal, QObject, QPoint, QThread, pyqtSlot
+    QInputDialog, QApplication, QLabel, QHBoxLayout, QVBoxLayout, QProgressBar, QMessageBox, QCheckBox)
+from PyQt5.QtCore import pyqtSignal, QObject, QPoint, QThread, pyqtSlot, Qt
 
 
 import sys
 import os
 import time
+import webbrowser
 sys.path.append(".\\modules")
 sys.path.append("..\\friends\\modules")
 from function import *
@@ -14,17 +15,21 @@ from window import *
 class ProgressThread(QThread):
     prog=pyqtSignal(int)
     task=pyqtSignal(str)
+    msg=pyqtSignal(str)
     
     
-    def __init__(self):
+    def __init__(self, one, two):
         super().__init__()
-    def run(self):########################################Заглушка для процесса работы
+        self.firstId=one
+        self.secondId=two
+    def run(self):
         
-        whoAmI='319299777'          #ID or short adress of first person
-        whoIsSome='alesbelarus'
-        #ID or short adress of second person
+        whoAmI=self.firstId          
+        whoIsSome=self.secondId
+        flag=True
         print (whoAmI)
         print (whoIsSome)
+        
         f=open("isUser.xml", 'w', encoding='utf-8')
         f.close()
         f=open("friends.xml", 'w', encoding='utf-8')
@@ -35,10 +40,7 @@ class ProgressThread(QThread):
         
         firstP_id=isIdAndConvert(whoAmI)
         secondP_id=isIdAndConvert(whoIsSome)
-        if firstP_id == secondP_id:
-            print ('Error! The IDs are the same!')
-            sys.exit()
-        start=time.time()
+                
         contact=''  #contact is list of mutual elements between friendlists
                     #it used for build connection table
 
@@ -48,7 +50,9 @@ class ProgressThread(QThread):
 
         if secondP_id in mn_listOfFr_1p:
             print ('Second person is your friend!') #checking if P2 is friend of P1
-            sys.exit()          ######## Exit if Match results
+            self.msg.emit('Second person is your friend!')
+            self.prog.emit(100)
+            flag=False          ######## Exit if Match results
         else:
 
             listOfFr_2p_lay1=getListOfFriends(secondP_id) #get friendlist for 2nd person (layer 1)
@@ -62,16 +66,19 @@ class ProgressThread(QThread):
                 print ('You have %d mutual friends' % len(list(mn_betw11)))
                 contact=list(mn_betw11)
                 connection_table=[]
+                
 
                 #building the chains and add it to conn. table for each of mutual elements 
+                iter=0
                 for member in contact:
+                    iter+=1
                     chain=[firstP_id, member, secondP_id]
                     connection_table.append(chain)
+                    self.prog.emit(int(iter/len(contact)*100))
+                    self.task.emit('Building the chains')
                     
                 print('\n%d chains were build:' % len(connection_table))
-                finish=time.time()
-                exect=finish-start
-                print('On work %.3f seconds\n' % exect)
+                
             else:   #if you do not have mutual friends in layer 1
                 self.task.emit('Downloading info for layer2 (person 1):')
 
@@ -92,19 +99,21 @@ class ProgressThread(QThread):
                     contact=list(mn_betw21)
                     connection_table=[]
                     #building the chains and add it to conn. table for each of mutual elements 
+                    iter=0
                     for member in contact:#for each member in contact 
+                        iter+=1
                         working_FrList=getListOfFriends(member)#get list of friends
                         contakt_w_l=set(working_FrList) & mn_listOfFr_1p#search mutual elements between fr list and layer 1 person 1
                         for cont in contakt_w_l:##for each member in this list form the chains and connection table
                             chain=[firstP_id, cont, member, secondP_id]
                             connection_table.append(chain)
-                    
+                        self.prog.emit(int(iter/len(contact)*100))
+                        self.task.emit('Building the chains')
                     print('\n%d chains were build:' % len(connection_table))
-                    finish=time.time()
-                    exect=finish-start
-                    print('On work %.3f seconds\n' % exect)
+                    
                 else:
                     print('Downloading info for layer2 (person 2):')
+                    self.task.emit('Downloading info for layer2 (person 2)')
                     listOfFr_2p_lay2=[]
                     i=0
                     for member in listOfFr_2p_lay1:#for each ID 
@@ -120,7 +129,10 @@ class ProgressThread(QThread):
                         contact=list(mn_betw22)
                         connection_table=[]
                         #building the chains and add it to conn. table for each of mutual elements 
+                        self.task.emit("Building the chains")
+                        iter=0
                         for member in contact:#for each member in contact 
+                            iter+=1
                             working_FrList=getListOfFriends(member)#get list of friends
                             contakt_w_p1=set(working_FrList) & mn_listOfFr_1p#search mutual elements between fr list and layer 1 person 1
                             contakt_w_p2=set(working_FrList) & mn_listOfFr_2p#search mutual elements between fr list and layer 1 person 2
@@ -128,75 +140,141 @@ class ProgressThread(QThread):
                                 for cont2 in contakt_w_p2:
                                     chain=[firstP_id, cont1, member, cont2, secondP_id]
                                     connection_table.append(chain)
-                    
+                            self.prog.emit(int(iter/len(contact)*100))
                         print('\n%d chains were build:' % len(connection_table))
-                        finish=time.time()
-                        exect=finish-start
-                        print('On work %.3f seconds\n' % exect)
+                        
                         
                     else:
                         print ('I`m don`t find any chains')
+                        self.msg.emit('I`m don`t find any chains')
                         exiter()
-                        sys.exit()
+                        flag=False
                         
-
-        result(connection_table)
+        if flag:
+            result(connection_table)
         #####################################################################################################
         #### Clearing the working directory
-        exiter()
-        finish=time.time()
-        exect=finish-start
+            exiter()
+        
+        self.quit()
+        
+        
             
+class messageWin(QWidget):
+
+    def __init__(self, mess):
+        super().__init__()
+        self.message=mess
+        self.initUI()
+
+
+    def initUI(self):
+
+        reply = QMessageBox.information(self, 'Message',
+            self.message, QMessageBox.Ok, QMessageBox.Ok)
+            
+class errorWin (QWidget):
+    def __init__(self, mess):
+        
+        super().__init__()
+        self.message=mess
+        self.initUI()
+        
+    def initUI(self):
+        reply=QMessageBox.critical(self, 'Warning', self.message, QMessageBox.Yes, QMessageBox.Yes)
+        
+
+        
+
+
+    
+
+        
+        
+
 
           
 
 class ProgressWindow(QWidget):
     
-    def __init__(self):
+    def __init__(self, one, two):
         super().__init__()
-        #firstId=''
-        #secondId=''
         self.myThread = None
+        self.showR=False
+        
+      
+        self.firstId=one
+        self.secondId=two
+        print (self.firstId, self.secondId)
         self.on_working()
-        #id1=pyqtSignal(str)
-        #id2=pyqtSignal(str)
+        
         self.initProgressWindow()
-        #id1.connect(self.set_id1)
-        #id2.connect(self.set_id2)
+        
         
     def on_working(self):
         if not self.myThread:
-            self.myThread=ProgressThread()
+            self.myThread=ProgressThread(self.firstId, self.secondId)
             self.myThread.prog.connect(self.on_progress)
             self.myThread.task.connect(self.on_task)
-            
+            self.myThread.msg.connect(self.thrMsg)
     
-            #self.id1.connect(self.set_id1)
-            #self.id2.connect(self.set_id2)
+            
             self.myThread.finished.connect(self.on_finished)
             self.myThread.start()
+            
         
     def on_progress(self, value):
         self.progress.setValue(value)
     def on_task(self, value):
         self.label2.setText(value)
-    '''def set_id1(self, value):
-        self.firstId=value
-    def set_id2(self, value):
-        self.secondId=value'''
-        
+    def thrMsg(self, value):
+        message=messageWin(value)
+    
     def on_finished(self):
         self.myThread.prog.disconnect(self.on_progress)
         self.myThread.task.disconnect(self.on_task)
+        self.myThread.msg.disconnect(self.thrMsg)
         self.myThread.finished.disconnect(self.on_finished)
         self.myThread = None
+        print ("thread closed")
+        
+        self.cancelButton.clicked.disconnect(QApplication.instance().quit)
+        self.cancelButton.setText('Done')
+        self.cancelButton.clicked.connect(self.done)
+        
+        self.cb=QCheckBox('Show me the result file', self)
+        self.cb.stateChanged.connect(self.showRes)
+        
+        self.hboxManage.addWidget(self.cb)
+        self.messageDone=messageWin('Hell Yeah! Done!')
+    
+    def done(self):
+        if self.showR:
+            webbrowser.open('result.html')
+            self.close()
+        else:
+            self.close()
+    
+    def showRes(self, state):
+        if state==Qt.Checked:
+            self.showR=True
+        else:
+            self.showR=False
+        
+        
+            
+        
     
     def initProgressWindow(self):
-        cancelButton = QPushButton("Cancel")
-        cancelButton.clicked.connect(QApplication.instance().quit)
-        hboxManage = QHBoxLayout()
-        hboxManage.addStretch(1)
-        hboxManage.addWidget(cancelButton)
+        self.cancelButton = QPushButton("Cancel")
+        self.cancelButton.clicked.connect(QApplication.instance().quit)
+        
+        
+        
+        self.hboxManage = QHBoxLayout()
+        
+        self.hboxManage.addStretch(1)
+        self.hboxManage.addWidget(self.cancelButton)
         
         self.progress=QProgressBar()
         hboxProgress=QHBoxLayout()
@@ -218,7 +296,7 @@ class ProgressWindow(QWidget):
         vbox.addWidget(self.label2)
         vbox.addLayout(vboxProgress)
         vbox.addStretch(1)
-        vbox.addLayout(hboxManage)
+        vbox.addLayout(self.hboxManage)
         self.setLayout(vbox)    
         self.setGeometry(300, 300, 400, 250)
         self.setMinimumSize(400, 250)
@@ -237,7 +315,8 @@ class FirstWindow(QWidget):
         super().__init__()
         self.secondWin = None
         self.initUI()
-
+        self.line1_val='319299777'
+        self.line2_val='h.victory'
 
     def initUI(self):
         
@@ -323,12 +402,16 @@ class FirstWindow(QWidget):
             
     def OK(self):
         
-        self.close()
-        if not self.secondWin:
-            self.secondWin=ProgressWindow()#############вставить проверку на наличие айдишников!!!!
-            #self.secondWin.id1.emit(self.line1_val)
-            #self.secondWin.id2.emit(self.line2_val)
         
+        if len(self.line1_val)==0 or len(self.line2_val)==0:
+            error=errorWin('One or more arguments no taken!')
+        elif self.line1_val == self.line2_val:
+            error=errorWin('Error! The IDs are the same!')
+        else:
+            self.close()
+            if not self.secondWin:
+                self.secondWin=ProgressWindow(self.line1_val, self.line2_val)
+            
         
         
         
