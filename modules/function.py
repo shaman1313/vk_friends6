@@ -42,7 +42,7 @@ def getListOfFriends (person_id):
 
     friendsOfP=urllib.request.urlopen("https://api.vk.com/method/friends.get.xml?user_id=%d" % int(person_id))
     dec_friendsOfP=friendsOfP.read().decode("utf-8")
-    #print(dec_friendsOfP)
+
     f=open("friends.xml", 'w', encoding='utf-8')
     f.write(dec_friendsOfP)
     f.close()
@@ -52,7 +52,7 @@ def getListOfFriends (person_id):
     listOfFriends=[]  #list of friens
     for node in uid:
         listOfFriends.append(node.childNodes[0].nodeValue)
-    #print("\n", listOfFriends_1P)
+
     return listOfFriends
 
 def getUserData(person_id):
@@ -117,10 +117,7 @@ def exiter():
     os.remove('person.xml')
 
 def result(connection_table):
-    ########################################################################################
-    #           GENERATION THE HTML-FILE - result; and out the result to terminal
-    ######################################################################################
-    start=time.time()
+
     gi=0
     f=open("result.html", 'w', encoding='utf-8')
     f.write('''<!DOCTYPE html >
@@ -129,9 +126,9 @@ def result(connection_table):
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="description" content="">
     <title>Results</title>
-      <link rel="stylesheet" type="text/css" href="result_files/fonts_cnt.css">
-      <link rel="stylesheet" type="text/css" href="result_files/common.css">
-      <link type="text/css" rel="stylesheet" href="result_files/docs.css">
+      <link rel="stylesheet" type="text/css" href="result_css/fonts_cnt.css">
+      <link rel="stylesheet" type="text/css" href="result_css/common.css">
+      <link type="text/css" rel="stylesheet" href="result_css/docs.css">
       <style>
        TABLE {
         table-layout: fixed; /* Ячейки фиксированной ширины */
@@ -198,10 +195,9 @@ def result(connection_table):
       
       <div class="docs_wrap">
         <div id="docs_list">''' % chains_number)
-    #f.close()
 
     for mem in connection_table:
-        #f=open("result.html", 'a', encoding='utf-8')
+
         f.write('''<div class="docs_item _docs_item" id="docs_file_319299777_414600186">
      <table width="100%" >
       <tr>''')
@@ -226,11 +222,10 @@ def result(connection_table):
         </table>
       
          </div>''')
-        #f.close()
+
         gi+=1
         sys.stdout.write('\n')
 
-    #f=open("result.html", 'a', encoding='utf-8')
     f.write('''</div>
      </div>
     </body></html>''')

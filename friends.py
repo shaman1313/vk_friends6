@@ -1,6 +1,8 @@
 import sys
+
 sys.path.append(".\\modules")
 from window import *
+from script import *
 
 if __name__=="__main__":
     if len (sys.argv) == 1:

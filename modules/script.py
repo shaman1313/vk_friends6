@@ -12,30 +12,10 @@ from PyQt5.QtWidgets import (QWidget, QPushButton, QLineEdit,
 
 def main(first, second):
     print ('Hello! I`m script for frends search')
-    #self.secondWin.label2.setText('hello')
-    sys.exit()
-
 
     whoAmI=first          #ID or short adress of first person
     whoIsSome=second       #ID or short adress of second person
-    ##########################################################################################
-    #alesbelarus
-    #manzhesova.marina
-    #199922935   kupchik
-    #319784945   banned
-    #529501        no user
-    
-    
-    #319299777      its me
-    #200323901   vasya dyachenko
-    
-    
-    
-    #denis_lesko
-    #h.victory not friend but 2 mutual fr
-    #46773881       4 friends between
-    #387534203      no chains in 3 user
-    ######################################################################################################
+
     f=open("isUser.xml", 'w', encoding='utf-8')
     f.close()
     f=open("friends.xml", 'w', encoding='utf-8')
@@ -43,12 +23,6 @@ def main(first, second):
     f=open("person.xml", 'w', encoding='utf-8')
     f.close()
 
-
-    #################################################################################################################
-    #
-    #                   Block of code
-    #
-    #################################################################################################################
     print('First user')
     firstP_id=isIdAndConvert(whoAmI)
     print('second user')
@@ -56,7 +30,6 @@ def main(first, second):
     if firstP_id == secondP_id:
         print ('Error! The IDs are the same!')
         sys.exit()
-    start=time.time()
     contact=''  #contact is list of mutual elements between friendlists
                 #it used for build connection table
 
@@ -87,9 +60,7 @@ def main(first, second):
                 connection_table.append(chain)
                 
             print('\n%d chains were build:' % len(connection_table))
-            finish=time.time()
-            exect=finish-start
-            print('On work %.3f seconds\n' % exect)
+
         else:   #if you do not have mutual friends in layer 1
             print('Downloading info for layer2 (person 1):')
 
@@ -103,8 +74,7 @@ def main(first, second):
             print("\nIn layer 2 are %d entries for P1" % len(listOfFr_1p_lay2))
             mn_listOfFr_1p_l2=set(listOfFr_1p_lay2)##friendslist of L2 for P1
             mn_betw21=mn_listOfFr_1p_l2 & mn_listOfFr_2p#### the difference between L2P1 and L1P2
-            
-            
+
             if len(list(mn_betw21)) != 0:#if you have mutual elements, build connection table
                 print ('You have %d mutual friends' % len(list(mn_betw21)))
                 contact=list(mn_betw21)
@@ -118,9 +88,7 @@ def main(first, second):
                         connection_table.append(chain)
                 
                 print('\n%d chains were build:' % len(connection_table))
-                finish=time.time()
-                exect=finish-start
-                print('On work %.3f seconds\n' % exect)
+
             else:
                 print('Downloading info for layer2 (person 2):')
                 listOfFr_2p_lay2=[]
@@ -148,20 +116,11 @@ def main(first, second):
                                 connection_table.append(chain)
                 
                     print('\n%d chains were build:' % len(connection_table))
-                    finish=time.time()
-                    exect=finish-start
-                    print('On work %.3f seconds\n' % exect)
                     
                 else:
                     print ('I`m don`t find any chains')
                     exiter()
                     sys.exit()
-                    
 
     result(connection_table)
-    #####################################################################################################
-    #### Clearing the working directory
     exiter()
-    finish=time.time()
-    exect=finish-start
-    print('On work %.3f seconds' % exect)
