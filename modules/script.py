@@ -132,8 +132,8 @@ def main(first, second):
                             i+=1
                             sys.stdout.write("\rdone %.2f persent" % (i/len(listOfFr_2p_lay2)*100))
                         print("\nIn layer 3 are %d entries for P2" % len(listOfFr_2p_lay3))
-                        mn_listOfFr_2p_l3=set(listOfFr_2p_lay3)##friendslist of L3 for P1
-                        mn_betw32=mn_listOfFr_2p_l3 & mn_listOfFr_1p_l2#### the difference between L3P1 and L2P2
+                        mn_listOfFr_2p_l3=set(listOfFr_2p_lay3)##friendslist of L3 for P2
+                        mn_betw32=mn_listOfFr_2p_l3 & mn_listOfFr_1p_l2#### the difference between L3P2 and L2P1
                         
                         
                         
