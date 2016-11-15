@@ -16,12 +16,6 @@ def main(first, second):
     whoAmI=first          #ID or short adress of first person
     whoIsSome=second       #ID or short adress of second person
 
-    f=open("isUser.xml", 'w', encoding='utf-8')
-    f.close()
-    f=open("friends.xml", 'w', encoding='utf-8')
-    f.close()
-    f=open("person.xml", 'w', encoding='utf-8')
-    f.close()
 
     print('First user')
     firstP_id=isIdAndConvert(whoAmI)
@@ -119,8 +113,7 @@ def main(first, second):
                     
                 else:
                     print ('I`m don`t find any chains')
-                    exiter()
+                    
                     sys.exit()
 
     result(connection_table)
-    exiter()

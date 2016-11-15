@@ -23,13 +23,7 @@ class ProgressThread(QThread):
         whoAmI=self.firstId          
         whoIsSome=self.secondId
         flag=True
-        
-        f=open("isUser.xml", 'w', encoding='utf-8')
-        f.close()
-        f=open("friends.xml", 'w', encoding='utf-8')
-        f.close()
-        f=open("person.xml", 'w', encoding='utf-8')
-        f.close()
+
                 
         firstP_id=isIdAndConvert(whoAmI)
         secondP_id=isIdAndConvert(whoIsSome)
@@ -137,14 +131,12 @@ class ProgressThread(QThread):
                     else:
                         print ('I`m don`t find any chains')
                         self.msg.emit('I`m don`t find any chains')
-                        exiter()
+                        
                         flag=False
                         
         if flag:
             result(connection_table)
-            #### Clearing the working directory
-            exiter()
-        
+                    
         self.quit()
        
 class messageWin(QWidget):

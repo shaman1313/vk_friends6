@@ -10,11 +10,11 @@ def isIdAndConvert (whoIs):
     resp=urllib.request.urlopen("https://api.vk.com/method/users.get.xml?user_ids=%s" % whoIs)
     dec_resp=resp.read().decode("utf-8")
 
-    f=open("isUser.xml", 'w', encoding='utf-8')
+    '''f=open("isUser.xml", 'w', encoding='utf-8')
     f.write(dec_resp)
-    f.close()
+    f.close()'''
 
-    xml=parse('isUser.xml')
+    xml=parseString(dec_resp)
     if len(xml.getElementsByTagName('deactivated')) != 0:
         print ('User was banned or deleted acount')
         sys.exit()
@@ -43,11 +43,11 @@ def getListOfFriends (person_id):
     friendsOfP=urllib.request.urlopen("https://api.vk.com/method/friends.get.xml?user_id=%d" % int(person_id))
     dec_friendsOfP=friendsOfP.read().decode("utf-8")
 
-    f=open("friends.xml", 'w', encoding='utf-8')
+    '''f=open("friends.xml", 'w', encoding='utf-8')
     f.write(dec_friendsOfP)
-    f.close()
+    f.close()'''
 
-    xml=parse('friends.xml')
+    xml=parseString(dec_friendsOfP)
     uid=xml.getElementsByTagName('uid')
     listOfFriends=[]  #list of friens
     for node in uid:
@@ -61,11 +61,11 @@ def getUserData(person_id):
     person=urllib.request.urlopen("https://api.vk.com/method/users.get.xml?user_id=%d&fields=photo_100,bdate" % int(person_id))
     dec_person=person.read().decode("utf-8")
 
-    f=open("person.xml", 'w', encoding='utf-8')
+    '''f=open("person.xml", 'w', encoding='utf-8')
     f.write(dec_person)
-    f.close()
+    f.close()'''
 
-    xml=parse('person.xml')
+    xml=parseString(dec_person)
 
     uid=xml.getElementsByTagName('uid')
     for node in uid:
@@ -111,10 +111,6 @@ def getUserData(person_id):
     sys.stdout.write('%s %s' % (first_name_v, last_name_v))
     return info_lst
 
-def exiter():
-    os.remove('friends.xml')
-    os.remove('isUser.xml')
-    os.remove('person.xml')
 
 def result(connection_table):
 
