@@ -112,8 +112,37 @@ def main(first, second):
                     print('\n%d chains were build:' % len(connection_table))
                     
                 else:
-                    print ('I`m don`t find any chains')
-                    
-                    sys.exit()
+                    print('Downloading info for layer3 (person 1):')
+                    listOfFr_1p_lay3=[]
+                    i=0
+                    for member in listOfFr_1p_lay2:#for each ID 
+                        listOfFr_1p_lay3.extend(getListOfFriends(member))
+                        i+=1
+                        sys.stdout.write("\rdone %.2f persent" % (i/len(listOfFr_1p_lay2)*100))
+                    print("\nIn layer 3 are %d entries for P2" % len(listOfFr_1p_lay3))
+                    mn_listOfFr_1p_l3=set(listOfFr_1p_lay3)##friendslist of L3 for P1
+                    mn_betw32=mn_listOfFr_1p_l3 & mn_listOfFr_2p_l2#### the difference between L3P1 and L2P2
+                
+                    if len(list(mn_betw32)) != 0:
+                        print ('You have %d mutual friends' % len(list(mn_betw32)))
+                        contact=list(mn_betw32)
+                        connection_table=[]
+                        #building the chains and add it to conn. table for each of mutual elements 
+                        for member in contact:#for each member in contact 
+                            working_FrList=getListOfFriends(member)#get list of friends
+                            contakt_w_p1=set(working_FrList) & mn_listOfFr_1p_l2#search mutual elements between fr list and layer 2 person 1
+                            contakt_w_p2=set(working_FrList) & mn_listOfFr_2p#search mutual elements between fr list and layer 1 person 2
+                            for cont1 in contakt_w_p1:##for each member in this list form the chains and connection table
+                                cont1_fl=set(getListOfFriends(cont1))
+                                cont1_ccand=list(cont1_fl & mn_listOfFr_1p)
+                                for ccand in cont1_ccand:
+                                    for cont2 in contakt_w_p2:
+                                        chain=[firstP_id, ccand, cont1, member, cont2, secondP_id]
+                                        connection_table.append(chain)
+                
+                        print('\n%d chains were build:' % len(connection_table))
+                    else:
+                        print ('I`m don`t find any chains')
+                        sys.exit()
 
     result(connection_table)
