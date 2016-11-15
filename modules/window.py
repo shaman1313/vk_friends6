@@ -129,17 +129,31 @@ class ProgressThread(QThread):
                         print('\n%d chains were build:' % len(connection_table))
                                                 
                     else:
-                        print('Downloading info for layer3 (person 1):')
-                        self.task.emit('Downloading info for layer3 (person 1):')
-                        listOfFr_1p_lay3=[]
-                        i=0
-                        for member in listOfFr_1p_lay2:#for each ID 
-                            listOfFr_1p_lay3.extend(getListOfFriends(member))
-                            i+=1
-                            self.prog.emit(int(i/len(listOfFr_1p_lay2)*100))
-                        print("\nIn layer 3 are %d entries for P2" % len(listOfFr_1p_lay3))
-                        mn_listOfFr_1p_l3=set(listOfFr_1p_lay3)##friendslist of L3 for P1
-                        mn_betw32=mn_listOfFr_1p_l3 & mn_listOfFr_2p_l2#### the difference between L3P1 and L2P2
+                        if len(listOfFr_2p_lay2) > len(listOfFr_1p_lay2):
+                            print('Downloading info for layer3 (person 1):')
+                            self.task.emit('Downloading info for layer3 (person 1):')
+                            listOfFr_1p_lay3=[]
+                            i=0
+                            for member in listOfFr_1p_lay2:#for each ID 
+                                listOfFr_1p_lay3.extend(getListOfFriends(member))
+                                i+=1
+                                self.prog.emit(int((i/len(listOfFr_1p_lay2)*100)))
+                            print("\nIn layer 3 are %d entries for P1" % len(listOfFr_1p_lay3))
+                            mn_listOfFr_1p_l3=set(listOfFr_1p_lay3)##friendslist of L3 for P1
+                            mn_betw32=mn_listOfFr_1p_l3 & mn_listOfFr_2p_l2#### the difference between L3P1 and L2P2
+                        else:
+                            print('Downloading info for layer3 (person 2):')
+                            self.task.emit('Downloading info for layer3 (person 2):')
+                            listOfFr_2p_lay3=[]
+                            i=0
+                            for member in listOfFr_2p_lay2:#for each ID 
+                                listOfFr_2p_lay3.extend(getListOfFriends(member))
+                                i+=1
+                                self.prog.emit(int((i/len(listOfFr_2p_lay2)*100)))
+                            print("\nIn layer 3 are %d entries for P2" % len(listOfFr_2p_lay3))
+                            mn_listOfFr_2p_l3=set(listOfFr_2p_lay3)##friendslist of L3 for P2
+                            mn_betw32=mn_listOfFr_2p_l3 & mn_listOfFr_1p_l2#### the difference between L3P2 and L2P1
+                            
                     
                         if len(list(mn_betw32)) != 0:
                             print ('You have %d mutual friends' % len(list(mn_betw32)))
