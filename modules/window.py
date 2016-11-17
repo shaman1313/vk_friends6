@@ -1,7 +1,12 @@
 from PyQt5.QtWidgets import (QWidget, QPushButton, QLineEdit,
     QInputDialog, QApplication, QLabel, QHBoxLayout, QVBoxLayout, QProgressBar, QMessageBox, QCheckBox)
 from PyQt5.QtCore import pyqtSignal, QObject, QPoint, QThread, pyqtSlot, Qt
+
 import sys
+'''sys.path.append("C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python35-32\\Lib\\site-packages\\PyQt5")
+import PyQt5.QtWidgets
+import PyQt5.QtCore
+'''
 import os
 import time
 import webbrowser
@@ -19,14 +24,14 @@ class ProgressThread(QThread):
         self.firstId=one
         self.secondId=two
     def run(self):
-        
+        #self.msg.emit('thread is running')
         whoAmI=self.firstId          
         whoIsSome=self.secondId
         flag=True
 
         firstP_id=isIdAndConvert(whoAmI)
         secondP_id=isIdAndConvert(whoIsSome)
-                
+        
         contact=''  #contact is list of mutual elements between friendlists
                     #it used for build connection table
 
@@ -103,7 +108,7 @@ class ProgressThread(QThread):
                     for member in listOfFr_2p_lay1:#for each ID 
                         listOfFr_2p_lay2.extend(getListOfFriends(member))
                         i+=1
-                        self.prog.emit(int(i/len(listOfFr_1p_lay1)*100))
+                        self.prog.emit(int(i/len(listOfFr_2p_lay1)*100))
                     print("\nIn layer 2 are %d entries for P2" % len(listOfFr_2p_lay2))
                     mn_listOfFr_2p_l2=set(listOfFr_2p_lay2)##friendslist of L2 for P2
                     mn_betw22=mn_listOfFr_1p_l2 & mn_listOfFr_2p_l2#### the difference between L2P1 and L2P2
