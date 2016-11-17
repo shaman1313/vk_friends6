@@ -3,10 +3,7 @@ from PyQt5.QtWidgets import (QWidget, QPushButton, QLineEdit,
 from PyQt5.QtCore import pyqtSignal, QObject, QPoint, QThread, pyqtSlot, Qt
 
 import sys
-'''sys.path.append("C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python35-32\\Lib\\site-packages\\PyQt5")
-import PyQt5.QtWidgets
-import PyQt5.QtCore
-'''
+
 import os
 import time
 import webbrowser
